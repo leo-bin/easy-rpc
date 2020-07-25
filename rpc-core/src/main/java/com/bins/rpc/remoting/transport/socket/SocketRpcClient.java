@@ -17,11 +17,11 @@ import java.net.Socket;
  * @date 2020/7/23 18:56
  * @apiNote 基于socket实现客户端的通信
  */
-public class RpcSocketClient implements ClientTransport {
+public class SocketRpcClient implements ClientTransport {
 
     private final ServiceDiscovery serviceDiscovery;
 
-    public RpcSocketClient() {
+    public SocketRpcClient() {
         this.serviceDiscovery = new StaticServiceDiscovery();
     }
 

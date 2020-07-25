@@ -1,5 +1,6 @@
 package com.bins.rpc.provider;
 
+import com.bins.rpc.entity.RpcServiceProperties;
 import com.bins.rpc.enums.RpcErrorMessageEnum;
 import com.bins.rpc.exception.RpcException;
 import lombok.extern.slf4j.Slf4j;
@@ -17,17 +18,16 @@ public class ServiceProviderImpl implements ServiceProvider {
 
     /**
      * 如何解决一个接口被多个实现类实现的情况？
-     * 1.可以通过group 分组
-     * 2.key:service/interface name
-     * 3.value:service
+     * 1.我们可以给每一个接口的不同实现根据具体的功能特征打上标签
+     * 2.最后服务的名字就是：接口名字+标签
      */
     private static Map<String, Object> services = new ConcurrentHashMap<>(16);
 
 
     @Override
-    public <T> void addServiceProvider(T service, Class<T> serviceClass) {
-        //获取服务的全限定名
-        String serviceName = serviceClass.getCanonicalName();
+    public <T> void addServiceProvider(T service, Class<T> serviceClass, RpcServiceProperties serviceProperties) {
+        //获取服务的唯一name
+        String serviceName = serviceProperties.getUniqueServiceName();
         //已经存在了就不用注册了
         if (services.containsKey(serviceName)) {
             return;

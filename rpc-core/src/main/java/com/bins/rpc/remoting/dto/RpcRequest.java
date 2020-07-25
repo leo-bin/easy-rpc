@@ -1,5 +1,6 @@
 package com.bins.rpc.remoting.dto;
 
+import com.bins.rpc.entity.RpcServiceProperties;
 import com.bins.rpc.enums.RpcMessageTypeEnum;
 import lombok.Builder;
 import lombok.Data;
@@ -21,4 +22,5 @@ public class RpcRequest implements Serializable {
     private Object[] parameters;
     private Class<?>[] paramTypes;
     private RpcMessageTypeEnum rpcMessageTypeEnum;
+    private RpcServiceProperties serviceProperties;
 }

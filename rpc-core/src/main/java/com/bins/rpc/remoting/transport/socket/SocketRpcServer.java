@@ -1,5 +1,6 @@
 package com.bins.rpc.remoting.transport.socket;
 
+import com.bins.rpc.entity.RpcServiceProperties;
 import com.bins.rpc.provider.ServiceProvider;
 import com.bins.rpc.provider.ServiceProviderImpl;
 import com.bins.rpc.utils.ThreadPoolFactoryUtil;
@@ -18,7 +19,7 @@ import java.util.concurrent.ExecutorService;
  * @apiNote 基于socket实现服务端的通信
  */
 @Slf4j
-public class RpcSocketServer {
+public class SocketRpcServer {
 
     private ExecutorService threadPool;
     private String host;
@@ -27,7 +28,7 @@ public class RpcSocketServer {
     private ServiceProvider serviceProvider;
 
 
-    public RpcSocketServer(String host, int port) {
+    public SocketRpcServer(String host, int port) {
         this.host = host;
         this.port = port;
         threadPool = ThreadPoolFactoryUtil.createThreadPoolIfAbsent("socket-server-rpc-pool");
@@ -39,19 +40,20 @@ public class RpcSocketServer {
     /**
      * 发布服务
      */
-    public <T> void publishService(T service, Class<T> serviceClass) {
+    public <T> void publishService(T service, Class<T> serviceClass, RpcServiceProperties serviceProperties) {
         //注册一个服务提供者实例
-        serviceProvider.addServiceProvider(service, serviceClass);
-        //对外发布服务
+        serviceProvider.addServiceProvider(service, serviceClass, serviceProperties);
+        log.info("服务：{}已经注册成功。", serviceProperties.getUniqueServiceName());
 
-        start();
+        //对外发布服务
+        log.info("服务：{}已经发布成功。", serviceProperties.getUniqueServiceName());
     }
 
 
     /**
      * 启动服务
      */
-    private void start() {
+    public void start() {
         try (ServerSocket serverSocket = new ServerSocket()) {
             //监听端口
             serverSocket.bind(new InetSocketAddress(host, port));

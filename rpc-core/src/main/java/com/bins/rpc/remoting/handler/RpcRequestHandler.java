@@ -25,7 +25,7 @@ public class RpcRequestHandler {
      * 处理rpc请求
      */
     public Object handle(RpcRequest rpcRequest) {
-        Object service = serviceProvider.getServiceProvider(rpcRequest.getInterfaceName());
+        Object service = serviceProvider.getServiceProvider(rpcRequest.getServiceProperties().getUniqueServiceName());
         return invokeTargetMethod(rpcRequest, service);
     }
 

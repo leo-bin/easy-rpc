@@ -1,10 +1,11 @@
 package com.bins.rpc.proxy.handler;
 
+import com.bins.rpc.entity.RpcServiceProperties;
 import com.bins.rpc.remoting.dto.RpcMessageChecker;
 import com.bins.rpc.remoting.dto.RpcRequest;
 import com.bins.rpc.remoting.dto.RpcResponse;
 import com.bins.rpc.remoting.transport.ClientTransport;
-import com.bins.rpc.remoting.transport.socket.RpcSocketClient;
+import com.bins.rpc.remoting.transport.socket.SocketRpcClient;
 import com.bins.rpc.utils.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,9 +21,21 @@ import java.lang.reflect.Method;
 public class RpcInvocationHandler implements InvocationHandler {
 
     private final ClientTransport clientTransport;
+    private final RpcServiceProperties serviceProperties;
+
 
     public RpcInvocationHandler(ClientTransport clientTransport) {
         this.clientTransport = clientTransport;
+        this.serviceProperties = RpcServiceProperties.builder().serviceName("").tag("").build();
+    }
+
+    public RpcInvocationHandler(ClientTransport clientTransport, RpcServiceProperties serviceProperties) {
+        this.clientTransport = clientTransport;
+
+        if (serviceProperties.getTag() == null) {
+            serviceProperties.setTag("");
+        }
+        this.serviceProperties = serviceProperties;
     }
 
     @Override
@@ -36,12 +49,13 @@ public class RpcInvocationHandler implements InvocationHandler {
                 .interfaceName(method.getDeclaringClass().getName())
                 .paramTypes(method.getParameterTypes())
                 .requestId(CommonUtil.UUID32())
+                .serviceProperties(serviceProperties)
                 .build();
 
         RpcResponse rpcResponse = null;
 
         //2.发送请求
-        if (clientTransport instanceof RpcSocketClient) {
+        if (clientTransport instanceof SocketRpcClient) {
             rpcResponse = (RpcResponse) clientTransport.sendRpcObject(rpcRequest);
         }
 
