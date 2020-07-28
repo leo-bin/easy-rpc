@@ -6,10 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="example-rpc-client" />
+        <module name="example-rpc-server" />
         <module name="rpc-common" />
         <module name="rpc-core" />
-        <module name="rpc-example-client" />
-        <module name="rpc-example-server" />
         <module name="rpc-service-api" />
       </profile>
     </annotationProcessing>

@@ -13,8 +13,8 @@
         <module>rpc-service-api</module>
         <module>rpc-common</module>
         <module>rpc-core</module>
-        <module>rpc-example-server</module>
-        <module>rpc-example-client</module>
+        <module>example-rpc-server</module>
+        <module>example-rpc-client</module>
     </modules>
 
     <properties>
