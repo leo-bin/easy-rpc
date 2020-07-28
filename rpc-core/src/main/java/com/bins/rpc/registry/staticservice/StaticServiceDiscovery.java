@@ -1,4 +1,6 @@
-package com.bins.rpc.registry;
+package com.bins.rpc.registry.staticservice;
+
+import com.bins.rpc.registry.ServiceDiscovery;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;

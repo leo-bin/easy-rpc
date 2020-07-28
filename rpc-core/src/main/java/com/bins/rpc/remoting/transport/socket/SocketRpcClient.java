@@ -2,7 +2,7 @@ package com.bins.rpc.remoting.transport.socket;
 
 import com.bins.rpc.exception.RpcException;
 import com.bins.rpc.registry.ServiceDiscovery;
-import com.bins.rpc.registry.StaticServiceDiscovery;
+import com.bins.rpc.registry.staticservice.StaticServiceDiscovery;
 import com.bins.rpc.remoting.dto.RpcRequest;
 import com.bins.rpc.remoting.transport.ClientTransport;
 

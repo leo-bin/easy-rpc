@@ -1,7 +1,8 @@
 package com.bins.rpc.remoting.transport.netty.client;
 
 import com.bins.rpc.factory.SingletonFactory;
-import com.bins.rpc.registry.StaticServiceDiscovery;
+import com.bins.rpc.registry.ServiceDiscovery;
+import com.bins.rpc.registry.zk.ZKServiceDiscovery;
 import com.bins.rpc.remoting.dto.RpcRequest;
 import com.bins.rpc.remoting.dto.RpcResponse;
 import com.bins.rpc.remoting.transport.ClientTransport;
@@ -22,12 +23,12 @@ public class NettyRpcClient implements ClientTransport {
 
     private final ChannelProvider channelProvider;
     private final UnprocessedRequests unprocessedRequests;
-    private final StaticServiceDiscovery serviceDiscovery;
+    private final ServiceDiscovery serviceDiscovery;
 
     public NettyRpcClient() {
         channelProvider = SingletonFactory.getInstance(ChannelProvider.class);
         unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
-        serviceDiscovery = new StaticServiceDiscovery();
+        serviceDiscovery = new ZKServiceDiscovery();
     }
 
 
