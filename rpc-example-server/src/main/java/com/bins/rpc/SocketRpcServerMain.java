@@ -8,9 +8,9 @@ import com.bins.rpc.serviceimpl.StandardCalculator;
 /**
  * @author leo-bin
  * @date 2020/7/23 22:40
- * @apiNote rpc服务端测试
+ * @apiNote 基于socket的rpc服务端测试
  */
-public class RpcServerMain {
+public class SocketRpcServerMain {
     public static void main(String[] args) {
         //绑定具体的服务地址
         SocketRpcServer server = new SocketRpcServer("127.0.0.1", 9000);

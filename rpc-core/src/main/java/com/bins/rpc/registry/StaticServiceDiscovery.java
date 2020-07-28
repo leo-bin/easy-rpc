@@ -1,6 +1,8 @@
 package com.bins.rpc.registry;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 
 /**
  * @author leo-bin
@@ -11,6 +13,13 @@ public class StaticServiceDiscovery implements ServiceDiscovery {
 
     @Override
     public InetSocketAddress lookupService(String serviceName) {
-        return new InetSocketAddress("127.0.0.1", 9000);
+        String host = "127.0.0.1";
+        int port = 9000;
+        try {
+            host = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return new InetSocketAddress(host, port);
     }
 }

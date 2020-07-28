@@ -5,12 +5,15 @@ import com.bins.rpc.remoting.dto.RpcMessageChecker;
 import com.bins.rpc.remoting.dto.RpcRequest;
 import com.bins.rpc.remoting.dto.RpcResponse;
 import com.bins.rpc.remoting.transport.ClientTransport;
+import com.bins.rpc.remoting.transport.netty.client.NettyRpcClient;
 import com.bins.rpc.remoting.transport.socket.SocketRpcClient;
 import com.bins.rpc.utils.CommonUtil;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author leo-bin
@@ -38,6 +41,8 @@ public class RpcInvocationHandler implements InvocationHandler {
         this.serviceProperties = serviceProperties;
     }
 
+    @SneakyThrows
+    @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
         log.info("invoked method: [{}]", method.getName());
@@ -54,9 +59,18 @@ public class RpcInvocationHandler implements InvocationHandler {
 
         RpcResponse rpcResponse = null;
 
-        //2.发送请求
+        //2.发送请求(选择哪种通信方式：基于NIO的netty或者BIO的socket)
+        //socket
         if (clientTransport instanceof SocketRpcClient) {
             rpcResponse = (RpcResponse) clientTransport.sendRpcObject(rpcRequest);
+        }
+
+        //netty
+        if (clientTransport instanceof NettyRpcClient) {
+            CompletableFuture<RpcResponse<Object>> future = (CompletableFuture<RpcResponse<Object>>)
+                    clientTransport.sendRpcObject(rpcRequest);
+            //如果还没结果则原地阻塞直到返回调用结果
+            rpcResponse = future.get();
         }
 
         //3.校验响应结果

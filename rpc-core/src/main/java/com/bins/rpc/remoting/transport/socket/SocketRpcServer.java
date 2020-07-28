@@ -1,6 +1,7 @@
 package com.bins.rpc.remoting.transport.socket;
 
 import com.bins.rpc.entity.RpcServiceProperties;
+import com.bins.rpc.factory.SingletonFactory;
 import com.bins.rpc.provider.ServiceProvider;
 import com.bins.rpc.provider.ServiceProviderImpl;
 import com.bins.rpc.utils.ThreadPoolFactoryUtil;
@@ -16,7 +17,7 @@ import java.util.concurrent.ExecutorService;
 /**
  * @author leo-bin
  * @date 2020/7/23 18:56
- * @apiNote 基于socket实现服务端的通信
+ * @apiNote 基于socket中的BIO实现服务端的通信
  */
 @Slf4j
 public class SocketRpcServer {
@@ -33,7 +34,7 @@ public class SocketRpcServer {
         this.port = port;
         threadPool = ThreadPoolFactoryUtil.createThreadPoolIfAbsent("socket-server-rpc-pool");
 
-        serviceProvider = new ServiceProviderImpl();
+        serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
     }
 
 
