@@ -28,9 +28,8 @@ public class NettyRpcClient implements ClientTransport {
     public NettyRpcClient() {
         channelProvider = SingletonFactory.getInstance(ChannelProvider.class);
         unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
-        serviceDiscovery = new ZKServiceDiscovery();
+        serviceDiscovery =new ZKServiceDiscovery();
     }
-
 
     @Override
     public CompletableFuture<RpcResponse<Object>> sendRpcObject(RpcRequest rpcRequest) {

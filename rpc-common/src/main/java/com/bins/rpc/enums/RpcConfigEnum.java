@@ -18,6 +18,11 @@ public enum RpcConfigEnum {
     RPC_NETTY_PORT("rpc.netty.port"),
 
     /**
+     * 负载均衡算法类型
+     */
+    RPC_LOAD_BALANCE_TYPE("rpc.loadBalance.type"),
+
+    /**
      * zk默认地址属性key
      */
     ZK_ADDRESS("rpc.zookeeper.address");

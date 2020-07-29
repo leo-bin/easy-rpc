@@ -12,7 +12,7 @@ import java.util.Properties;
  * @apiNote 读取文件工具类
  */
 @Slf4j
-public class PropertiesFileUtil {
+public final class PropertiesFileUtil {
 
     private PropertiesFileUtil() {
     }
