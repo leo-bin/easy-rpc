@@ -13,6 +13,11 @@ public enum RpcConfigEnum {
     RPC_CONFIG_PATH("rpc.properties"),
 
     /**
+     * netty绑定的端口
+     */
+    RPC_NETTY_PORT("rpc.netty.port"),
+
+    /**
      * zk默认地址属性key
      */
     ZK_ADDRESS("rpc.zookeeper.address");

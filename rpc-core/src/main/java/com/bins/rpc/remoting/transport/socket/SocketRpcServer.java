@@ -43,7 +43,7 @@ public class SocketRpcServer {
      */
     public <T> void publishService(T service, Class<T> serviceClass, RpcServiceProperties serviceProperties) {
         //注册一个服务提供者实例
-        serviceProvider.addServiceProvider(service, serviceClass, serviceProperties);
+        serviceProvider.publishService(service, serviceClass, serviceProperties);
         log.info("服务：{}已经注册成功。", serviceProperties.getUniqueServiceName());
 
         //对外发布服务

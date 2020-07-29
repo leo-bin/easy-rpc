@@ -1,6 +1,7 @@
 package com.bins.rpc.remoting.transport.netty.server;
 
 import com.bins.rpc.entity.RpcServiceProperties;
+import com.bins.rpc.enums.RpcConfigEnum;
 import com.bins.rpc.factory.SingletonFactory;
 import com.bins.rpc.provider.ServiceProvider;
 import com.bins.rpc.provider.ServiceProviderImpl;
@@ -9,6 +10,7 @@ import com.bins.rpc.remoting.dto.RpcResponse;
 import com.bins.rpc.remoting.transport.netty.codec.kryo.NettyKryoDecoder;
 import com.bins.rpc.remoting.transport.netty.codec.kryo.NettyKryoEncoder;
 import com.bins.rpc.serialize.kryo.KryoSerializer;
+import com.bins.rpc.utils.PropertiesFileUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -24,6 +26,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,21 +37,18 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class NettyRpcServer {
 
-    private final int port;
-    private final ServiceProvider serviceProvider;
+    public static int defaultPort = 9000;
+    private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
     private final KryoSerializer kryoSerializer = new KryoSerializer();
 
     public NettyRpcServer() {
-        port = 9000;
-        serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
     }
 
+    /**
+     * 发布并实例化服务
+     */
     public <T> void registerService(T service, Class<T> serviceClass, RpcServiceProperties serviceProperties) {
-        serviceProvider.addServiceProvider(service, serviceClass, serviceProperties);
-        log.info("服务：{}已经注册成功。", serviceProperties.getUniqueServiceName());
-
-        //对外发布服务
-        log.info("服务：{}已经发布成功。", serviceProperties.getUniqueServiceName());
+        serviceProvider.publishService(service, serviceClass, serviceProperties);
     }
 
     /**
@@ -56,6 +56,7 @@ public class NettyRpcServer {
      */
     @SneakyThrows
     public void start() {
+        //获取本地host
         String host = InetAddress.getLocalHost().getHostAddress();
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -80,7 +81,7 @@ public class NettyRpcServer {
                     });
 
             //同步等待绑定端口
-            ChannelFuture future = serverBootstrap.bind(host, port).sync();
+            ChannelFuture future = serverBootstrap.bind(host, defaultPort).sync();
 
             //一旦服务端绑定的端口关闭了就结束future
             future.channel().closeFuture().sync();

@@ -35,7 +35,7 @@ public final class CuratorUtils {
 
     private static String defaultZookeeperAddress = "127.0.0.1:2181";
     private static final Set<String> REGISTERED_PATH_SET = ConcurrentHashMap.newKeySet();
-    private static final Map<String, List<String>> SERVICEC_ADDRESS_MAP = new ConcurrentHashMap<>(16);
+    private static final Map<String, List<String>> SERVICE_ADDRESS_MAP = new ConcurrentHashMap<>(16);
 
     private CuratorUtils() {
     }
@@ -94,15 +94,15 @@ public final class CuratorUtils {
      */
     public static List<String> getChildrenNodes(CuratorFramework zkClient, String rpcServiceName) {
         //已经存在直接返回
-        if (SERVICEC_ADDRESS_MAP.containsKey(rpcServiceName)) {
-            return SERVICEC_ADDRESS_MAP.get(rpcServiceName);
+        if (SERVICE_ADDRESS_MAP.containsKey(rpcServiceName)) {
+            return SERVICE_ADDRESS_MAP.get(rpcServiceName);
         }
 
         List<String> result;
         String servicePath = ZK_REGISTRY_ROOT_PATH + "/" + rpcServiceName;
         try {
             result = zkClient.getChildren().forPath(servicePath);
-            SERVICEC_ADDRESS_MAP.put(rpcServiceName, result);
+            SERVICE_ADDRESS_MAP.put(rpcServiceName, result);
             //给这个节点注册一个监听器
             registerWatcher(zkClient, servicePath, rpcServiceName);
         } catch (Exception e) {
@@ -118,8 +118,9 @@ public final class CuratorUtils {
     public static void registerWatcher(CuratorFramework zkClient, String path, String rpcServiceName) {
         PathChildrenCache pathChildrenCache = new PathChildrenCache(zkClient, path, true);
         PathChildrenCacheListener pathChildrenCacheListener = (curatorFramework, pathChildrenCacheEvent) -> {
+            //如果服务所在地址有变动就重新读取配置并更新服务地址
             List<String> serviceAddresses = curatorFramework.getChildren().forPath(path);
-            SERVICEC_ADDRESS_MAP.put(rpcServiceName, serviceAddresses);
+            SERVICE_ADDRESS_MAP.put(rpcServiceName, serviceAddresses);
         };
 
         pathChildrenCache.getListenable().addListener(pathChildrenCacheListener);

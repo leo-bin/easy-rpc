@@ -41,9 +41,9 @@ public class RpcInvocationHandler implements InvocationHandler {
         this.serviceProperties = serviceProperties;
     }
 
+    @Override
     @SneakyThrows
     @SuppressWarnings("unchecked")
-    @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
         log.info("invoked method: [{}]", method.getName());
 

@@ -10,12 +10,12 @@ import com.bins.rpc.entity.RpcServiceProperties;
 public interface ServiceProvider {
 
     /**
-     * 注册一个服务提供者
+     * 发布服务并初始化服务
      */
-    <T> void addServiceProvider(T service, Class<T> serviceClass, RpcServiceProperties serviceProperties);
+    <T> void publishService(T service, Class<T> serviceClass,RpcServiceProperties serviceProperties);
 
     /**
      * 通过服务名字拿到服务提供者的实例
      */
-    Object getServiceProvider(String serviceName);
+    Object getService(String serviceName);
 }

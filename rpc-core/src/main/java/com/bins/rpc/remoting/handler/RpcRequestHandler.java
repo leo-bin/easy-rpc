@@ -2,6 +2,7 @@ package com.bins.rpc.remoting.handler;
 
 import com.bins.rpc.enums.RpcResponseCode;
 import com.bins.rpc.exception.RpcException;
+import com.bins.rpc.factory.SingletonFactory;
 import com.bins.rpc.provider.ServiceProvider;
 import com.bins.rpc.provider.ServiceProviderImpl;
 import com.bins.rpc.remoting.dto.RpcRequest;
@@ -19,13 +20,13 @@ import java.lang.reflect.Method;
 @Slf4j
 public class RpcRequestHandler {
 
-    private ServiceProvider serviceProvider = new ServiceProviderImpl();
+    private ServiceProvider serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
 
     /**
      * 处理rpc请求
      */
     public Object handle(RpcRequest rpcRequest) {
-        Object service = serviceProvider.getServiceProvider(rpcRequest.getServiceProperties().getUniqueServiceName());
+        Object service = serviceProvider.getService(rpcRequest.getServiceProperties().getUniqueServiceName());
         return invokeTargetMethod(rpcRequest, service);
     }
 

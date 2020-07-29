@@ -20,7 +20,7 @@ public abstract class AbstractLoadBalance implements LoadBalance {
         if (serviceAddress.size() == 1) {
             return serviceAddress.get(0);
         }
-        return null;
+        return doSelect(serviceAddress);
     }
 
     protected abstract String doSelect(List<String> serviceAddress);

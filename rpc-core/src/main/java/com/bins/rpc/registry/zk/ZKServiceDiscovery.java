@@ -3,7 +3,7 @@ package com.bins.rpc.registry.zk;
 import com.bins.rpc.enums.RpcErrorMessageEnum;
 import com.bins.rpc.exception.RpcException;
 import com.bins.rpc.loadbalance.LoadBalance;
-import com.bins.rpc.loadbalance.RandomBalance;
+import com.bins.rpc.loadbalance.FullRandomBalance;
 import com.bins.rpc.registry.ServiceDiscovery;
 import com.bins.rpc.registry.zk.util.CuratorUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class ZKServiceDiscovery implements ServiceDiscovery {
     private final LoadBalance loadBalance;
 
     public ZKServiceDiscovery() {
-        loadBalance = new RandomBalance();
+        loadBalance = new FullRandomBalance();
     }
 
     /**

@@ -3,8 +3,15 @@ package com.bins.rpc.provider;
 import com.bins.rpc.entity.RpcServiceProperties;
 import com.bins.rpc.enums.RpcErrorMessageEnum;
 import com.bins.rpc.exception.RpcException;
+import com.bins.rpc.factory.SingletonFactory;
+import com.bins.rpc.registry.ServiceRegistry;
+import com.bins.rpc.registry.zk.ZKServiceRegistry;
+import com.bins.rpc.remoting.transport.netty.server.NettyRpcServer;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,11 +28,19 @@ public class ServiceProviderImpl implements ServiceProvider {
      * 1.我们可以给每一个接口的不同实现根据具体的功能特征打上标签
      * 2.最后服务的名字就是：接口名字+标签
      */
-    private static Map<String, Object> services = new ConcurrentHashMap<>(16);
+    private Map<String, Object> services;
+    private final ServiceRegistry serviceRegistry;
+
+
+    public ServiceProviderImpl() {
+        services = new ConcurrentHashMap<>(16);
+        serviceRegistry = SingletonFactory.getInstance(ZKServiceRegistry.class);
+    }
 
 
     @Override
-    public <T> void addServiceProvider(T service, Class<T> serviceClass, RpcServiceProperties serviceProperties) {
+    @SneakyThrows
+    public <T> void publishService(T service, Class<T> serviceClass, RpcServiceProperties serviceProperties) {
         //获取服务的唯一name
         String serviceName = serviceProperties.getUniqueServiceName();
         //已经存在了就不用注册了
@@ -33,12 +48,17 @@ public class ServiceProviderImpl implements ServiceProvider {
             return;
         }
         services.put(serviceName, service);
-        log.info("Add Service:{} and interface :{}", serviceName, service.getClass().getInterfaces());
+        log.info("服务：{}已经实例成功。", serviceName);
+
+        //对外发布服务
+        String host = InetAddress.getLocalHost().getHostAddress();
+        serviceRegistry.registryService(serviceName, new InetSocketAddress(host, NettyRpcServer.defaultPort));
+        log.info("服务：{}已经发布成功。", serviceName);
     }
 
 
     @Override
-    public Object getServiceProvider(String serviceName) {
+    public Object getService(String serviceName) {
         Object service = services.get(serviceName);
         if (null == service) {
             throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND);
