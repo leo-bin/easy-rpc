@@ -69,6 +69,7 @@ public class ZKServiceDiscovery implements ServiceDiscovery {
         } else {
             url = defaultBalance.getServiceAddress(serviceAddresses);
         }
+
         log.info("成功发现目标服务，服务地址是：[{}]", url);
         //解析url拿到具体的主机和端口
         String[] socketAddressArray = url.split(":");

@@ -6,6 +6,8 @@ package com.bins.rpc;
  * @apiNote 计算器服务接口
  */
 public interface Calculator {
-
+    /**
+     * 加法运算
+     */
     Integer add(int a, int b);
 }
