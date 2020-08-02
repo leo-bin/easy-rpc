@@ -2,9 +2,13 @@
 
 ## 前话
 
-**参考dubbo以及部分开源项目实现了一个简单自定义RPC框架——easy-rpc**
+**参考网上对RPC的设计，实现了一个自定义RPC框架——easy-rpc**
 
-**开发本项目的目的就是为了在手写的过程中更好的理解和学习框架的设计原理。**
+**开发本项目的目的就是为了在手写的过程中更好的理解和学习框架的设计思想。**
+
+**也为以后学习分布式框架打下基础。 **
+
+<br>
 
 ------------------------------------------------------------
 
@@ -12,7 +16,7 @@
 
 ## 目前的整体架构
 
-
+<br>
 
 **`技术栈：`**
 
@@ -22,19 +26,19 @@
 
 **3.使用`Kryo`代替JDK自带的序列化机制**
 
-**4.使用`JDK动态代理`实现网络通信的底层封装过程**
+**4.使用`JDK动态代理`实现对网络通信过程的封装**
 
 **5.提供多种`负载均衡`算法。**
 
 
 
-
+<br>
 
 **架构图：**
 
 ![image-20200730181003042](https://bins-pic.oss-cn-shanghai.aliyuncs.com/mypic/image-20200730181003042.png)
 
-
+<br>
 
 
 
@@ -42,19 +46,25 @@
 
 ## 项目开发的初衷
 
-为什么要做这个项目？为什么要反复造轮子？现成的dubbo不香吗？
+为什么要做这个项目？为什么要反复造轮子？现成的**dubbo**不香吗？
 
 现有的rpc框架其实已经做的很好了，像阿里的dubbo，新浪的motan等等。
 
 但是本人觉得在学习一门技术之前如果能够深入实践一下，会比学习理论知识要好的多。
 
-实践之后不仅印象会深刻一些，你还能从中学习到如何更优雅的设计某个功能？
+实践之后不仅**印象会深刻**一些，你还能从中学习到如何更**优雅**的设计某个功能？
 
-实践能够让你发现一些在使用和学习过程中发现不了的事情，比如某个接口应该怎么样设计？
+实践能够让你发现一些在使用和学习过程中发现不了的事情。
 
-怎么设计会比较优雅，可扩展性怎么样？代码之间的耦合度又是怎样的？
+**比如某个接口应该怎么样设计？**
 
-这样设计线程安全吗？这样写会不会比较重复？
+**怎么设计会比较优雅，可扩展性怎么样？**
+
+**代码之间的耦合度又是怎样的？**
+
+这样设计**线程安全**吗？这样写会不会**比较重复啰嗦**？
+
+。。。
 
 **总知一句话，光会用还不行，一定要深入理解设计原理。**
 
@@ -79,6 +89,8 @@
 6.使用Netty的NIO代替了原来的基于BIO的Socket进行网络通信。
 
 7.使用ZooKeeper完成了服务注册中心，并使用完全随机算法实现负载均衡。
+
+<br>
 
 ----------------------------------------------------------
 
@@ -115,15 +127,15 @@
 
 ## 如何使用？
 
-1.先克隆项目到本地
+**1.先克隆项目到本地**
 
 ```shell
 git clone git@github.com:leo-bin/easy-rpc.git
 ```
 
+<br>
 
-
-2.或者使用GUI工具：
+**2.或者使用GUI工具：**
 
 找一个文件夹，右键鼠标，点击OK，开始克隆：
 
@@ -133,15 +145,15 @@ git clone git@github.com:leo-bin/easy-rpc.git
 
 **3.使用IDEA导入项目（选择Maven导入方式）**
 
-
+<br>
 
 **4.项目骨架：**
 
 ![image-20200730181741950](https://bins-pic.oss-cn-shanghai.aliyuncs.com/mypic/image-20200730181741950.png)
 
+<br>
 
-
-一共有五个模块：
+一共有**五个模块**：
 
 **rpc-core**是核心模块，主要处理代理，服务注册和发现，网络通信等等。
 
@@ -151,15 +163,17 @@ git clone git@github.com:leo-bin/easy-rpc.git
 
 剩下的两个就是测试模块了，一个是**客户端**，一个是**服务端**。
 
+<br>
 
+**使用：**
 
-假设我们现在有一个服务叫做：Calculator，用来计算普通的加法。
+假设我们现在有一个服务叫做：Calculator，计算器服务，用来计算普通的加法。
 
 但是现在需要将这个服务作为服务端单独部署在一台服务器中。
 
 现在有另外一台服务器作为客户端需要调用这个服务。
 
-
+<br>
 
 
 
@@ -177,9 +191,9 @@ public interface Calculator {
 }
 ```
 
+<br>
 
-
-然后我们需要在服务端模块写好接口的实现类
+然后我们需要在服务端模块写好接口的**实现类**:
 
 假设有两种计算器：**标准计算器**和**科学计算器**
 
@@ -197,7 +211,7 @@ public class StandardCalculator implements Calculator {
 }
 ```
 
-
+<br>
 
 ```java
 package com.bins.rpc.serviceimpl;
@@ -213,9 +227,11 @@ public class ScienceCalculator implements Calculator {
 }
 ```
 
+<br>
 
+需要提前在电脑中安装**ZooKeeper**并启动.
 
-需要提前在电脑中安装ZooKeeper并启动，Windows或者Llinux都可以（我是用的Windows）
+Windows或者Llinux都可以（我是用的Windows）
 
 **然后我们写好配置文件：**
 
@@ -224,12 +240,12 @@ public class ScienceCalculator implements Calculator {
 rpc.zookeeper.address=127.0.0.1:2181
 
 #负载均衡策略，1是完全随机，2是完全轮询策略
-rpc.loadBalance.type=2
+rpc.loadBalance.type=1
 ```
 
+<br>
 
-
-现在我们需要将服务注册进ZK中，然后启动服务端：
+现在我们需要将服务注册进**ZK**中，然后启动服务端：
 
 ```java
 public class NettyRpcServerMain {
@@ -274,18 +290,17 @@ public class NettyRpcServerMain {
 }
 ```
 
-
+<br>
 
 **启动效果：**
 
 ![image-20200730183645533](https://bins-pic.oss-cn-shanghai.aliyuncs.com/mypic/image-20200730183645533.png)
 
-
+<br>
 
 **现在写客户端的测试代码：**
 
 ```java
-@Slf4j
 public class NettyRpcClientMain {
     public static void main(String[] args) {
         System.out.println("//////////////////////////////////////////////////////////////////");
@@ -328,13 +343,13 @@ public class NettyRpcClientMain {
 }
 ```
 
-
+<br>
 
 **测试效果：**
 
 ![image-20200730184336800](https://bins-pic.oss-cn-shanghai.aliyuncs.com/mypic/image-20200730184336800.png)
 
-
+<br>
 
 
 
@@ -346,11 +361,11 @@ public class NettyRpcClientMain {
 
 **项目地址：**   https://github.com/Snailclimb/guide-rpc-framework
 
+<br>
 
+<br>
 
-
-
-**其次就是一些在学习RPC的时候发现的博文：**
+**其次就是一些在学习RPC的时候发现的优秀博文：**
 
 1.https://www.jianshu.com/p/2accc2840a1b
 
