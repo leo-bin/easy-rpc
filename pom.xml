@@ -28,7 +28,7 @@
         <netty.version>4.1.42.Final</netty.version>
         <kryo.version>4.0.2</kryo.version>
         <!--tools-->
-        <guava.version>29.0-jre</guava.version>
+        <guava.version>32.0.0-jre</guava.version>
         <!-- test -->
         <junit.jupiter.version>5.5.2</junit.jupiter.version>
         <junit.platform.version>1.5.2</junit.platform.version>
